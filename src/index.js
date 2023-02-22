@@ -1,16 +1,34 @@
 class Tablist {
     #tabs = [];
     #panels = [];
+    #activeTabIndex = -1;
 
     constructor(tabs, panels, activeTabIndex = 0) {
         this.#tabs = tabs;
         this.#panels = panels;
-        this.setActiveTab(activeTabIndex);
+        this.#activeTabIndex = activeTabIndex;
+        this.#initialize();
     }
 
     setActiveTab(newActiveTabIndex) {
-        this.#tabs.forEach((tab, index) => tab.setAttribute('aria-selected', index === newActiveTabIndex));
+        this.#tabs.forEach((tab, index) => {
+            tab.setAttribute('aria-selected', index === newActiveTabIndex);
+            tab.setAttribute('tabindex', (index == newActiveTabIndex) ? 0 : -1);
+        });
         this.#panels.forEach((panel, index) => panel.style.setProperty('display', (index === newActiveTabIndex) ? 'block' : 'none'));
+    }
+
+    addClickEvents() {
+        this.#tabs.forEach((tab, index) => tab.onclick = () => this.setActiveTab(index));
+    }
+    
+    #initialize() {
+        this.setActiveTab(this.#activeTabIndex);
+        this.#makePanelsFocusable();
+    }
+
+    #makePanelsFocusable() {
+        this.#panels.forEach(panel => panel.setAttribute('tabindex', 0));
     }
 }
 
@@ -35,10 +53,11 @@ class HorizontalTablistBuilder {
     constructTablist(tablist) {
         this.#setTablist(tablist);
 
-        this.#addTogglePanelFunctionality();
+        this.#addClickEvents();
     }
 
-    #addTogglePanelFunctionality() {
+    #addClickEvents() {
+        this.#getTablist().addClickEvents();
         return this;
     }
 }
