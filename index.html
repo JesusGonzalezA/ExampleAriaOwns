@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aria owns example</title>
+</head>
+<body>
+    <header>
+        <h1>Accessibility in practice</h1>
+        <nav>
+            <ul>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#description">Description</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article lang="en">
+            <h2>Use of <span>aria-owns</span></h2>
+            <section aria-labelledby="description">
+                <h3 id="description">Description</h3>
+                <p></p>
+            </section>
+            <section id="examples">
+                <h3 id="examples">Examples</h3>
+                <section>
+                    <h4>Tablist</h4>
+                    <div>
+                        <div role="tablist">
+                            <button tabindex="0" id="example_tab1" aria-controls="example1_panel1" role="tab" aria-selected="true" type="button">
+                                Breakfast
+                            </button>
+                            <button id="example_tab2" aria-controls="example1_panel2" role="tab" aria-selected="false" type="button">
+                                Lunch
+                            </button>
+                            <button id="example_tab3" aria-controls="example1_panel3" role="tab" aria-selected="false" type="button">
+                                Dinner
+                            </button>
+                        </div>
+                        <div>
+                            <div id="example1_panel1" aria-labelledby="example_tab1" role="tabpanel" tabindex="0">
+                                <p>Coffee and milk</p>
+                                <button>Hello</button>
+                            </div>
+                            <div id="example1_panel2" aria-labelledby="example_tab2" role="tabpanel">Fish and chips</div>
+                            <div id="example1_panel3" aria-labelledby="example_tab3" role="tabpanel">Salad</div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h4>Tablist</h4>
+                    <div>
+                        <button>Finish of screen</button>
+                    </div>
+                </section>
+            </section>
+        </article>
+    </main>
+    <footer>
+
+    </footer>
+    <script type="text/javascript" src="./src/index.js" />
+</body>
+</html>
