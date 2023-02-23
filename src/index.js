@@ -19,7 +19,22 @@ class Tablist {
     }
 
     addClickEvents() {
-        this.#tabs.forEach((tab, index) => tab.onclick = () => this.setActiveTab(index));
+        this.#tabs.forEach((tab, index) => {
+            tab.onclick = () => this.setActiveTab(index);
+            tab.onkeydown = event => {
+                if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    const nextIndex = (index + 1) % this.#tabs.length;
+                    this.setActiveTab(nextIndex);
+                    this.#tabs[nextIndex].focus();
+                } else if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    const prevIndex = (index - 1 + this.#tabs.length) % this.#tabs.length;
+                    this.setActiveTab(prevIndex);
+                    this.#tabs[prevIndex].focus();
+                }
+            }
+        });
     }
     
     #initialize() {
@@ -31,6 +46,7 @@ class Tablist {
         this.#panels.forEach(panel => panel.setAttribute('tabindex', 0));
     }
 }
+
 
 class Director {
     constructTablist(builder, tablist) {
