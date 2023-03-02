@@ -2,90 +2,85 @@ class Tablist {
     #tabs = [];
     #panels = [];
     #activeTabIndex = -1;
-    // Wrapper for the tablist, it represents the div id in which the tablist will be constructed
     #anchorDom = null;
 
-    // New constructor to create an empty tablist
-    // The user needs to call the addTab method
-    constructor(anchorDom, activeTabIndex = 0) {
+    constructor(anchorDom) {
         this.#anchorDom = anchorDom;
-        this.#activeTabIndex = activeTabIndex;
-        this.#initialize();
     }
 
-    setActiveTab(newActiveTabIndex) {
+    setActiveTab(newActiveTabIndex = 0) {
+        if (this.#tabs === [] || newActiveTabIndex >= this.#tabs.length || newActiveTabIndex < 0)
+             return;
+
+        this.#activeTabIndex = newActiveTabIndex; 
         this.#tabs.forEach((tab, index) => {
-            tab.setAttribute('aria-selected', index === newActiveTabIndex);
-            tab.setAttribute('tabindex', (index == newActiveTabIndex) ? 0 : -1);
+            tab.setAttribute('aria-selected', index === this.#activeTabIndex);
+            tab.setAttribute('tabindex', (index == this.#activeTabIndex) ? 0 : -1);
         });
-        this.#panels.forEach((panel, index) => panel.style.setProperty('display', (index === newActiveTabIndex) ? 'block' : 'none'));
-    }
-
-    addClickEvents() {
-        this.#tabs.forEach((tab, index) => tab.onclick = () => this.setActiveTab(index));
+        this.#panels.forEach((panel, index) => panel.style.setProperty('display', (index === this.#activeTabIndex) ? 'block' : 'none'));
     }
     
     #initialize() {
-        this.setActiveTab(this.#activeTabIndex);
-        this.#makePanelsFocusable();
+        this.setActiveTab();
     }
 
-    #makePanelsFocusable() {
-        this.#panels.forEach(panel => panel.setAttribute('tabindex', 0));
+    addArrowNavigation(event, index) {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft')
+            return;
+
+        event.preventDefault();
+
+        let newIndex = index;
+        if (event.key === 'ArrowRight') {
+            newIndex = (index + 1) % this.#tabs.length;
+        } else if (event.key === 'ArrowLeft') {
+            newIndex = (index - 1 + this.#tabs.length) % this.#tabs.length;
+        }
+
+        this.setActiveTab(newIndex);
+        this.#tabs[newIndex].focus();
     }
 
-    // Function to add a new tab and its corresponding panel to the tablist
-    // I should create a new DOM element for the tab and one for the panel and
-    // update the arrays
     addTab(tabTitle, panelParagraph) {
-        // create a new tab (html node)
+        const index = this.#tabs.length;
+        const tabId = `${this.#anchorDom.id}_tab${index}`;
+        const panelId = `${this.#anchorDom.id}_panel${index}`
+        
         const tab = `
-        <button id="example_tab1" aria-controls="example1_panel1" role="tab" aria-selected="true" type="button">
-            ${tabTitle}
-        </button>
-        `
-        // create a new panel (html node)
+            <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
+                ${tabTitle}
+            </button>
+        `;
         const panel = `
-        <div id="example1_panel1" aria-labelledby="example_tab1" role="tabpanel" tabindex="0">
-            <p>${panelParagraph}</p>
-        </div>
-        `
-        // add the new tab and new panel to the arrays
-        this.#tabs.add(tab);
-        this.#panels.add(panel);
+            <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
+                <p>${panelParagraph}</p>
+            </div>
+        `;
+
+        const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
+        const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
+        tabNode.onclick = () => this.setActiveTab(index);
+        tabNode.onkeydown = (ev) => this.addArrowNavigation(ev, index);
+        this.#tabs.push(tabNode);
+        this.#panels.push(panelNode);
     }
 
-    // Function to make the tablist renderablke
-    // It appends all the tabs and panels to the anchor dom element
     render() {
-        const html = `
-        <div role="tablist">
-            <button id="example_tab1" aria-controls="example1_panel1" role="tab" aria-selected="true" type="button">
-                Breakfast
-            </button>
-            <button id="example_tab2" aria-controls="example1_panel2" role="tab" aria-selected="false" type="button">
-                Lunch
-            </button>
-            <button id="example_tab3" aria-controls="example1_panel3" role="tab" aria-selected="false" type="button">
-                Dinner
-            </button>
-        </div>
-        <div>
-            <div id="example1_panel1" aria-labelledby="example_tab1" role="tabpanel" tabindex="0">
-                <p>Coffee and milk</p>
-                <button>Hello</button>
-            </div>
-            <div id="example1_panel2" aria-labelledby="example_tab2" role="tabpanel">Fish and chips</div>
-            <div id="example1_panel3" aria-labelledby="example_tab3" role="tabpanel">Salad</div>
-        </div>
-        `;
-        const html = `
-        <div role="tablist">
-            ${tabs.map(tab => tab.getHtml())}
-        </div>
-        `
-        // create a html node from the string and append it to the anchorDom
-        this.#anchorDom.appendChild(html);
+        this.#initialize();
+
+        const tablistElement = document.createElement('div');
+        tablistElement.setAttribute("role","tablist");
+        this.#tabs.forEach((tab) => {
+            tablistElement.appendChild(tab);
+        });
+
+        const panelElement = document.createElement('div');
+        this.#panels.forEach((panel) => {
+            panelElement.appendChild(panel);
+        });
+
+        this.#anchorDom.appendChild(tablistElement);
+        this.#anchorDom.appendChild(panelElement);
     }
 }
 
@@ -109,27 +104,20 @@ class HorizontalTablistBuilder {
 
     constructTablist(tablist) {
         this.#setTablist(tablist);
-
-        this.#addClickEvents();
-    }
-
-    #addClickEvents() {
-        this.#getTablist().addClickEvents();
-        return this;
     }
 }
 
 window.addEventListener('load', () => {
     const director = new Director();
-    const horizontalBuilder = new HorizontalTablistBuilder();
+    const horizontalBur = new HorizontalTablistBuilder();
 
     const tablistHorizontalDom = document.getElementById('tablist1');
     const tablistHorizontal = new Tablist(tablistHorizontalDom);
 
     tablistHorizontal.addTab("Breakfast", "Coffee and milk");
-    tablistHorizontal.addTab();
-    tablistHorizontal.addTab();
+    tablistHorizontal.addTab("Lunch","Lasagna");
+    tablistHorizontal.addTab("Dinner","Fish and chips");
     tablistHorizontal.render();
 
-    // director.constructTablist(horizontalBuilder, tablistHorizontal);
+    director.constructTablist(horizontalBuilder, tablistHorizontal);
 });
