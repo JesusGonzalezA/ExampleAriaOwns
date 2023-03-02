@@ -20,11 +20,11 @@ class Tablist {
         this.#panels.forEach((panel, index) => panel.style.setProperty('display', (index === this.#activeTabIndex) ? 'block' : 'none'));
     }
     
-    #initialize() {
+    #onBeforeRender() {
         this.setActiveTab();
     }
 
-    addArrowNavigation(event, index) {
+    #addArrowNavigation(event, index) {
         if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft')
             return;
 
@@ -39,6 +39,13 @@ class Tablist {
 
         this.setActiveTab(newIndex);
         this.#tabs[newIndex].focus();
+    }
+
+    #addTabEvents(index) {
+        const tabNode = this.#tabs[index];
+
+        tabNode.onclick = () => this.setActiveTab(index);
+        tabNode.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
     addTab(tabTitle, panelParagraph) {
@@ -59,14 +66,14 @@ class Tablist {
 
         const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
         const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
-        tabNode.onclick = () => this.setActiveTab(index);
-        tabNode.onkeydown = (ev) => this.addArrowNavigation(ev, index);
+        
         this.#tabs.push(tabNode);
         this.#panels.push(panelNode);
+        this.#addTabEvents(index);
     }
 
     render() {
-        this.#initialize();
+        this.#onBeforeRender();
 
         const tablistElement = document.createElement('div');
         tablistElement.setAttribute("role","tablist");
