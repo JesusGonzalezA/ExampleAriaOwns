@@ -84,6 +84,7 @@ class Tablist {
     }
 }
 
+
 class Director {
     constructTablist(builder, tablist) {
         builder.constructTablist(tablist);
