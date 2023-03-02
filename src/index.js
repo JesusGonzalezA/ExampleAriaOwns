@@ -96,11 +96,6 @@ class HorizontalTablistBuilder {
         this.#tablist = tablist;
     }
 
-    #getTablist() {
-        if (!this.#tablist) throw new Error("Tablist is not initialized");
-        return this.#tablist;
-    }
-
     constructTablist(tablist) {
         this.#setTablist(tablist);
     }
