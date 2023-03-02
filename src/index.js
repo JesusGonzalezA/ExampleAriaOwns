@@ -108,7 +108,7 @@ class HorizontalTablistBuilder {
 
 window.addEventListener('load', () => {
     const director = new Director();
-    const horizontalBur = new HorizontalTablistBuilder();
+    const horizontalBuilder = new HorizontalTablistBuilder();
 
     const tablistHorizontalDom = document.getElementById('tablist1');
     const tablistHorizontal = new Tablist(tablistHorizontalDom);
