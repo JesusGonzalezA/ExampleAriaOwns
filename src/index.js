@@ -83,8 +83,6 @@ class Tablist {
         this.#anchorDom.appendChild(panelElement);
     }
 }
-
-
 class Director {
     constructTablist(builder, tablist) {
         builder.constructTablist(tablist);
