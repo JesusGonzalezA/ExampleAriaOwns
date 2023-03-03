@@ -20,6 +20,6 @@ window.addEventListener('load', () => {
     const tablists = createTabLists();
     tablists.forEach(tablist => {
         populateTabList(tablist);
-        tablist.render()
+        tablist.render();
     });
 });
