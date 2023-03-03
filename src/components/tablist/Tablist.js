@@ -48,21 +48,29 @@ export default class Tablist {
         tabNode.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
+    _createTab(tabId, panelId, tabTitle) {
+        return `
+            <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
+                ${tabTitle}
+            </button>
+        `;
+    }
+
+    #createPanel(panelId, tabId, panelParagraph) {
+        return `
+            <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
+                <p>${panelParagraph}</p>
+            </div>
+        `;
+    }
+
     addTab(tabTitle, panelParagraph) {
         const index = this.#tabs.length;
         const tabId = `${this.#anchorDom.id}_tab${index}`;
         const panelId = `${this.#anchorDom.id}_panel${index}`
         
-        const tab = `
-            <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
-                ${tabTitle}
-            </button>
-        `;
-        const panel = `
-            <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
-                <p>${panelParagraph}</p>
-            </div>
-        `;
+        const tab = this._createTab(tabId, panelId, tabTitle);
+        const panel = this.#createPanel(panelId, tabId, panelParagraph);
 
         const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
         const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
