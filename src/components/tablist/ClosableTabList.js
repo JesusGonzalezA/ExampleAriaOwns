@@ -1,47 +1,45 @@
 import Tablist from "./tablist.js";
 
 export default class ClosableTabList extends Tablist {
-    _createTab(tabId, panelId, tabTitle, index) {
+    _createTab(tabId, panelId, tabTitle) {
       return `
-        <div id="${index}" style="display: inline-block; margin-right: 10px;">
+        <div style="display: inline-block; margin-right: 10px;">
           <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
             ${tabTitle}
           </button>
-          <button class="close-tab-button" data-index="${index}">
+          <button class="close-tab-button">
             X
           </button>
         </div>
       `;
     }
   
-    _addButtonEvents(index) {
-      const closeButton = this._tabs[index].querySelector('.close-tab-button');
-      closeButton.addEventListener('click', () => {
-        this.removeTab(index);
-        this.setActiveTab(index+1);
-      });
-    }
-  
-    removeTab(index) {
+    #removeTab(index) {
       this._tabs.splice(index, 1);
       this._panels.splice(index, 1);
+      this._activeTabIndex = this.#getIndexAfterRemoving(index);
+      this._reRender(); 
     }
 
-    addTab(tabTitle, panelParagraph) {
-        const index = this._tabs.length;
-        const tabId = `${this._anchorDom.id}_tab${index}`;
-        const panelId = `${this._anchorDom.id}_panel${index}`
-        
-        const tab = this._createTab(tabId, panelId, tabTitle,index);
-        const panel = this._createPanel(panelId, tabId, panelParagraph);
+    #getIndexAfterRemoving(index) {
+      const tabsLength = this._getTabs().length;
 
-        const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
-        const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
-        
-        this._tabs.push(tabNode);
-        this._panels.push(panelNode);
-        this._addTabEvents(index);
-        this._addButtonEvents(index);
-        //AddTabEvents is called last with index=0 so the active tab is set to the index 0 and that tab is not visible anymore
+      if(index == tabsLength) 
+        return tabsLength - 1;
+      if(tabsLength == 0) 
+        return -1;
+
+      return index;
+    }
+
+    _addTabEvents(index) {
+      const tabNode = this._getTabs()[index];
+      const closableButtonNode = tabNode.querySelector('.close-tab-button');
+      tabNode.onclick = () => this.setActiveTab(index);
+      closableButtonNode.onclick = () => this.#removeTab(index);
+    }
+
+    _getTabs() {
+      return this._tabs.filter(tab => tab.querySelector("[role='tab']"));
     }
 }

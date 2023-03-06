@@ -1,23 +1,23 @@
 export default class Tablist {
     _tabs = [];
     _panels = [];
-    #activeTabIndex = -1;
+    _activeTabIndex = -1;
     _anchorDom = null;
 
-    constructor(anchorDom) {
+    constructor(anchorDom, newActiveTabIndex = 0) {
         this._anchorDom = anchorDom;
+        this._activeTabIndex = newActiveTabIndex;
     }
-    setActiveTab(newActiveTabIndex = 0) {
+
+    setActiveTab(newActiveTabIndex = this._activeTabIndex) {
         if (this._tabs === [] || newActiveTabIndex >= this._tabs.length || newActiveTabIndex < 0)
              return;
-        
-        console.log(newActiveTabIndex)
-        this.#activeTabIndex = newActiveTabIndex; 
-        this._tabs.forEach((tab, index) => {
-            tab.setAttribute('aria-selected', index === this.#activeTabIndex);
-            tab.setAttribute('tabindex', (index == this.#activeTabIndex) ? 0 : -1);
+        this._activeTabIndex = newActiveTabIndex;
+        this._getTabs().forEach((tab, index) => {
+            tab.setAttribute('aria-selected', index === this._activeTabIndex);
+            tab.setAttribute('tabindex', (index == this._activeTabIndex) ? 0 : -1);
         });
-        this._panels.forEach((panel, index) => panel.style.setProperty('display', (index === this.#activeTabIndex) ? 'block' : 'none'));
+        this._panels.forEach((panel, index) => panel.style.setProperty('display', (index === this._activeTabIndex) ? 'block' : 'none'));
     }
     
     #onBeforeRender() {
@@ -37,11 +37,11 @@ export default class Tablist {
             newIndex = (index - 1 + this._tabs.length) % this._tabs.length;
         }
         this.setActiveTab(newIndex);
-        this._tabs[newIndex].focus();
+        this._getTabs()[newIndex].focus();
     }
 
     _addTabEvents(index) {
-        const tabNode = this._tabs[index];
+        const tabNode = this._getTabs()[index];
         tabNode.onclick = () => this.setActiveTab(index);
         tabNode.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
@@ -60,6 +60,10 @@ export default class Tablist {
                 <p>${panelParagraph}</p>
             </div>
         `;
+    }
+
+    _getTabs() {
+        return this._tabs;
     }
 
     addTab(tabTitle, panelParagraph) {
@@ -95,4 +99,20 @@ export default class Tablist {
         this._anchorDom.appendChild(tablistElement);
         this._anchorDom.appendChild(panelElement);
     }
+
+    #reAttatchEvents() {
+        this._getTabs().forEach((_, index) => {
+            this._addTabEvents(index);
+        });
+    }
+
+    #unRender() {
+        this._anchorDom.replaceChildren();
+    }
+
+    _reRender() {
+        this.#unRender();
+        this.#reAttatchEvents();
+        this.render();
+      }
 }
