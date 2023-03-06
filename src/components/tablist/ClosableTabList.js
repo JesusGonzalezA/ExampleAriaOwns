@@ -22,7 +22,7 @@ export default class ClosableTabList extends Tablist {
     }
 
     #getIndexAfterRemoving(index) {
-      const tabsLength = this._getTabs().length;
+      const tabsLength = this._tabs.length;
 
       if(index == tabsLength) 
         return tabsLength - 1;
@@ -32,14 +32,23 @@ export default class ClosableTabList extends Tablist {
       return index;
     }
 
+    _updateTabSelectedState(tab, isSelected) {
+      tab.setAttribute('aria-selected', isSelected);
+    }
+
     _addTabEvents(index) {
-      const tabNode = this._getTabs()[index];
-      const closableButtonNode = tabNode.querySelector('.close-tab-button');
-      tabNode.onclick = () => this.setActiveTab(index);
+      const tabWrapper = this._tabs[index];
+      const tab = this._getTabFromTabNode(tabWrapper);
+      const closableButtonNode = this.#getClosableButtonFromTabWrapper(tabWrapper);
+      tab.onclick = () => this.setActiveTab(index);
       closableButtonNode.onclick = () => this.#removeTab(index);
     }
 
-    _getTabs() {
-      return this._tabs.filter(tab => tab.querySelector("[role='tab']"));
+    _getTabFromTabNode(tabNode) {
+      return tabNode.querySelector("[role='tab']");
+    }
+
+    #getClosableButtonFromTabWrapper(tabWrapper) {
+      return tabWrapper.querySelector('.close-tab-button');
     }
 }

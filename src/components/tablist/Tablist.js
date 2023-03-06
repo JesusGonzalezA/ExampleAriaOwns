@@ -13,9 +13,9 @@ export default class Tablist {
         if (this._tabs === [] || newActiveTabIndex >= this._tabs.length || newActiveTabIndex < 0)
              return;
         this._activeTabIndex = newActiveTabIndex;
-        this._getTabs().forEach((tab, index) => {
-            tab.setAttribute('aria-selected', index === this._activeTabIndex);
-            tab.setAttribute('tabindex', (index == this._activeTabIndex) ? 0 : -1);
+        this._tabs.forEach((tabNode, index) => {
+            const tab = this._getTabFromTabNode(tabNode);
+            this._updateTabSelectedState(tab, index === this._activeTabIndex);
         });
         this._panels.forEach((panel, index) => panel.style.setProperty('display', (index === this._activeTabIndex) ? 'block' : 'none'));
     }
@@ -37,13 +37,14 @@ export default class Tablist {
             newIndex = (index - 1 + this._tabs.length) % this._tabs.length;
         }
         this.setActiveTab(newIndex);
-        this._getTabs()[newIndex].focus();
+        this._getTabFromTabNode(this._tabs[newIndex]).focus();
     }
 
     _addTabEvents(index) {
-        const tabNode = this._getTabs()[index];
-        tabNode.onclick = () => this.setActiveTab(index);
-        tabNode.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
+        const tabNode = this._tabs[index];
+        const tab = this._getTabFromTabNode(tabNode);
+        tab.onclick = () => this.setActiveTab(index);
+        tab.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
     _createTab(tabId, panelId, tabTitle) {
@@ -62,8 +63,8 @@ export default class Tablist {
         `;
     }
 
-    _getTabs() {
-        return this._tabs;
+    _getTabFromTabNode(tabNode) {
+        return tabNode;
     }
 
     addTab(tabTitle, panelParagraph) {
@@ -101,13 +102,18 @@ export default class Tablist {
     }
 
     #reAttatchEvents() {
-        this._getTabs().forEach((_, index) => {
+        this._tabs.forEach((_, index) => {
             this._addTabEvents(index);
         });
     }
 
     #unRender() {
         this._anchorDom.replaceChildren();
+    }
+
+    _updateTabSelectedState(tab, isSelected) {
+        tab.setAttribute('aria-selected', isSelected);
+        tab.setAttribute('tabindex', (isSelected) ? 0 : -1);
     }
 
     _reRender() {
