@@ -69,22 +69,27 @@ export default class Tablist {
         this._addTabEvents(index);
     }
 
-    render() {
-        this.#onBeforeRender();
-
+    _renderTabList() {
         const tablistElement = document.createElement('div');
         tablistElement.setAttribute("role","tablist");
         this._tabs.forEach((tab) => {
             tablistElement.appendChild(tab.getNode());
         });
+        this._anchorDom.appendChild(tablistElement);
+    }
 
+    _renderPanels() {
         const panelElement = document.createElement('div');
         this._panels.forEach((panel) => {
             panelElement.appendChild(panel.getNode());
         });
-
-        this._anchorDom.appendChild(tablistElement);
         this._anchorDom.appendChild(panelElement);
+    }
+
+    render() {
+        this.#onBeforeRender();
+        this._renderTabList();
+        this._renderPanels();
     }
 
     #reAttatchEvents() {

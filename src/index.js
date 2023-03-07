@@ -1,4 +1,4 @@
-import { HorizontalTabList, ClosableTabList } from './components/tablist/index.js'
+import { HorizontalTabList, ClosableTabList, ClosableAOTabList } from './components/tablist/index.js'
 
 const populateTabList = (tablist) => {
     tablist.addTab("Breakfast", "Coffee and milk");
@@ -13,7 +13,10 @@ const createTabLists = () => {
     const closableTabListDom = document.getElementById('tablist2');
     const closableTabList = new ClosableTabList(closableTabListDom);
 
-    return [horizontalTabList, closableTabList];
+    const closableAOTabListDom = document.getElementById('tablist3');
+    const closableAOTabList = new ClosableAOTabList(closableAOTabListDom);
+
+    return [horizontalTabList, closableTabList, closableAOTabList];
 };
 
 window.addEventListener('load', () => {

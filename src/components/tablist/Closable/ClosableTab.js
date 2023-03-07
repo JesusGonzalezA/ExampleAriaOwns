@@ -1,4 +1,4 @@
-import Tab from "./Tab.js";
+import Tab from "../Tab.js";
 
 export default class ClosableTab extends Tab {
 
