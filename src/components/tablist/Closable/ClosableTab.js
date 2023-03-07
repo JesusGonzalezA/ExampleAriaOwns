@@ -1,10 +1,8 @@
 import Tab from "../Tab.js";
 
 export default class ClosableTab extends Tab {
-
-    constructor(tabId, panelId, tabTitle) {
-        super();
-        this._renderTpl = `
+    _renderTpl({ tabId, panelId, tabTitle }) {
+        return `
             <div class="closable-tab">
                 <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
                     ${tabTitle}
@@ -14,11 +12,6 @@ export default class ClosableTab extends Tab {
                 </button>
             </div>
         `;
-        this.#initialize();
-    }
-
-    #initialize() {
-        this._tab = this._createNode();
     }
 
     _getEl() {

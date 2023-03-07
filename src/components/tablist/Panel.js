@@ -5,16 +5,20 @@ export default class Panel extends Element {
 
     constructor(panelId, tabId, panelParagraph) {
         super();
-        this._renderTpl = `
+        const config = { panelId, tabId, panelParagraph };
+        this.#initialize(config);
+    }
+
+    _renderTpl({ panelId, tabId, panelParagraph }) {
+        return `
             <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
                 <p>${panelParagraph}</p>
             </div>
         `;
-        this.#initialize();
     }
 
-    #initialize() {
-        this.#panel = this._createNode();
+    #initialize(config) {
+        this.#panel = this._createNode(config);
     }
 
     getNode() {

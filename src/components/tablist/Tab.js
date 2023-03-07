@@ -5,16 +5,21 @@ export default class Tab extends Element {
     
     constructor(tabId, panelId, tabTitle) {
         super();
-        this._renderTpl = `
+        const config = { tabId, panelId, tabTitle };
+        this.#initialize(config);
+    }
+
+    #initialize(config) {
+        this._tab = this._createNode(config);
+        this._tab.classList.add('tab-wrapper');
+    }
+
+    _renderTpl({ tabId, panelId, tabTitle }) {
+        return `
             <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
                 ${tabTitle}
             </button>
         `;
-        this.#initialize();
-    }
-
-    #initialize() {
-        this._tab = this._createNode();
     }
 
     _getEl() {
