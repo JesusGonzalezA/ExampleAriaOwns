@@ -6,6 +6,7 @@ export default class Tablist {
     _panels = [];
     _activeTabIndex = -1;
     _anchorDom = null;
+    _tablistWrapperDom = null;
 
     constructor(anchorDom, newActiveTabIndex = 0) {
         this._anchorDom = anchorDom;
@@ -70,12 +71,12 @@ export default class Tablist {
     }
 
     _renderTabList() {
-        const tablistElement = document.createElement('div');
-        tablistElement.setAttribute("role","tablist");
+        this._tablistWrapperDom = document.createElement('div');
+        this._tablistWrapperDom.setAttribute("role","tablist");
         this._tabs.forEach((tab) => {
-            tablistElement.appendChild(tab.getNode());
+            this._tablistWrapperDom.appendChild(tab.getNode());
         });
-        this._anchorDom.appendChild(tablistElement);
+        this._anchorDom.appendChild(this._tablistWrapperDom);
     }
 
     _renderPanels() {

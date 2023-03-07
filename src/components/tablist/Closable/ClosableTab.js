@@ -9,7 +9,7 @@ export default class ClosableTab extends Tab {
                 <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
                     ${tabTitle}
                 </button>
-                <button class="close-tab-button">
+                <button id="${tabId}_closable_button" class="close-tab-button">
                     X
                 </button>
             </div>
