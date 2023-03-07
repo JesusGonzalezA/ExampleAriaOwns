@@ -1,23 +1,25 @@
-export default class Tablist {
-    #tabs = [];
-    #panels = [];
-    #activeTabIndex = -1;
-    #anchorDom = null;
+import Panel from "./Panel.js";
+import Tab from "./Tab.js";
 
-    constructor(anchorDom) {
-        this.#anchorDom = anchorDom;
+export default class Tablist {
+    _tabs = [];
+    _panels = [];
+    _activeTabIndex = -1;
+    _anchorDom = null;
+
+    constructor(anchorDom, newActiveTabIndex = 0) {
+        this._anchorDom = anchorDom;
+        this._activeTabIndex = newActiveTabIndex;
     }
 
-    setActiveTab(newActiveTabIndex = 0) {
-        if (this.#tabs === [] || newActiveTabIndex >= this.#tabs.length || newActiveTabIndex < 0)
+    setActiveTab(newActiveTabIndex = this._activeTabIndex) {
+        if (this._tabs === [] || newActiveTabIndex >= this._tabs.length || newActiveTabIndex < 0)
              return;
-
-        this.#activeTabIndex = newActiveTabIndex; 
-        this.#tabs.forEach((tab, index) => {
-            tab.setAttribute('aria-selected', index === this.#activeTabIndex);
-            tab.setAttribute('tabindex', (index == this.#activeTabIndex) ? 0 : -1);
+        this._activeTabIndex = newActiveTabIndex;
+        this._tabs.forEach((tab, index) => {
+            tab._updateState(index === this._activeTabIndex);
         });
-        this.#panels.forEach((panel, index) => panel.style.setProperty('display', (index === this.#activeTabIndex) ? 'block' : 'none'));
+        this._panels.forEach((panel, index) => panel.setVisibility(index === this._activeTabIndex));
     }
     
     #onBeforeRender() {
@@ -32,69 +34,77 @@ export default class Tablist {
 
         let newIndex = index;
         if (event.key === 'ArrowRight') {
-            newIndex = (index + 1) % this.#tabs.length;
+            newIndex = (index + 1) % this._tabs.length;
         } else if (event.key === 'ArrowLeft') {
-            newIndex = (index - 1 + this.#tabs.length) % this.#tabs.length;
+            newIndex = (index - 1 + this._tabs.length) % this._tabs.length;
         }
-
         this.setActiveTab(newIndex);
-        this.#tabs[newIndex].focus();
+        this._tabs[newIndex]._getEl().focus();
     }
 
-    #addTabEvents(index) {
-        const tabNode = this.#tabs[index];
-
-        tabNode.onclick = () => this.setActiveTab(index);
-        tabNode.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
+    _addTabEvents(index) {
+        const tab = this._tabs[index]._getEl();
+        tab.onclick = () => this.setActiveTab(index);
+        tab.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
     _createTab(tabId, panelId, tabTitle) {
-        return `
-            <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
-                ${tabTitle}
-            </button>
-        `;
+        return new Tab(tabId, panelId, tabTitle);
     }
 
-    #createPanel(panelId, tabId, panelParagraph) {
-        return `
-            <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
-                <p>${panelParagraph}</p>
-            </div>
-        `;
+    _createPanel(panelId, tabId, panelParagraph) {
+        return new Panel(panelId, tabId, panelParagraph);
     }
 
     addTab(tabTitle, panelParagraph) {
-        const index = this.#tabs.length;
-        const tabId = `${this.#anchorDom.id}_tab${index}`;
-        const panelId = `${this.#anchorDom.id}_panel${index}`
+        const index = this._tabs.length;
+        const tabId = `${this._anchorDom.id}_tab${index}`;
+        const panelId = `${this._anchorDom.id}_panel${index}`
         
         const tab = this._createTab(tabId, panelId, tabTitle);
-        const panel = this.#createPanel(panelId, tabId, panelParagraph);
-
-        const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
-        const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
+        const panel = this._createPanel(panelId, tabId, panelParagraph);
         
-        this.#tabs.push(tabNode);
-        this.#panels.push(panelNode);
-        this.#addTabEvents(index);
+        this._tabs.push(tab);
+        this._panels.push(panel);
+        this._addTabEvents(index);
+    }
+
+    _renderTabList() {
+        const tablistElement = document.createElement('div');
+        tablistElement.setAttribute("role","tablist");
+        this._tabs.forEach((tab) => {
+            tablistElement.appendChild(tab.getNode());
+        });
+        this._anchorDom.appendChild(tablistElement);
+    }
+
+    _renderPanels() {
+        const panelElement = document.createElement('div');
+        this._panels.forEach((panel) => {
+            panelElement.appendChild(panel.getNode());
+        });
+        this._anchorDom.appendChild(panelElement);
     }
 
     render() {
         this.#onBeforeRender();
-
-        const tablistElement = document.createElement('div');
-        tablistElement.setAttribute("role","tablist");
-        this.#tabs.forEach((tab) => {
-            tablistElement.appendChild(tab);
-        });
-
-        const panelElement = document.createElement('div');
-        this.#panels.forEach((panel) => {
-            panelElement.appendChild(panel);
-        });
-
-        this.#anchorDom.appendChild(tablistElement);
-        this.#anchorDom.appendChild(panelElement);
+        this._renderTabList();
+        this._renderPanels();
     }
+
+    #reAttatchEvents() {
+        this._tabs.forEach((_, index) => {
+            this._addTabEvents(index);
+        });
+    }
+
+    #unRender() {
+        this._anchorDom.replaceChildren();
+    }
+
+    _reRender() {
+        this.#unRender();
+        this.#reAttatchEvents();
+        this.render();
+      }
 }
