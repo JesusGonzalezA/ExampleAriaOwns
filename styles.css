@@ -1,3 +1,15 @@
+--root {
+  --u4-green: #81b748;
+  --u4-black: #424747;
+  --u4-white: #ffffff;
+  --u4-blue: #4177a9;
+  --u4-gray: #f5f6f6;
+}
+
+html {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -9,3 +21,9 @@
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+.closable-tab {
+  display: inline-block;
+  margin-right: 10px;
+}
+

@@ -5,7 +5,7 @@ export default class ClosableTab extends Tab {
     constructor(tabId, panelId, tabTitle) {
         super();
         this._renderTpl = `
-            <div style="display: inline-block; margin-right: 10px;">
+            <div class="closable-tab">
                 <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
                     ${tabTitle}
                 </button>
