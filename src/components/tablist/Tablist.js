@@ -1,3 +1,4 @@
+import Panel from "./Panel.js";
 import Tab from "./Tab.js";
 
 export default class Tablist {
@@ -18,7 +19,7 @@ export default class Tablist {
         this._tabs.forEach((tab, index) => {
             tab._updateState(index === this._activeTabIndex);
         });
-        this._panels.forEach((panel, index) => panel.style.setProperty('display', (index === this._activeTabIndex) ? 'block' : 'none'));
+        this._panels.forEach((panel, index) => panel.setVisibility(index === this._activeTabIndex));
     }
     
     #onBeforeRender() {
@@ -52,15 +53,7 @@ export default class Tablist {
     }
 
     _createPanel(panelId, tabId, panelParagraph) {
-        return `
-            <div id="${panelId}" aria-labelledby="${tabId}" role="tabpanel" tabindex="0">
-                <p>${panelParagraph}</p>
-            </div>
-        `;
-    }
-
-    _getTabFromTabNode(tabNode) {
-        return tabNode;
+        return new Panel(panelId, tabId, panelParagraph);
     }
 
     addTab(tabTitle, panelParagraph) {
@@ -70,10 +63,9 @@ export default class Tablist {
         
         const tab = this._createTab(tabId, panelId, tabTitle);
         const panel = this._createPanel(panelId, tabId, panelParagraph);
-        const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
         
         this._tabs.push(tab);
-        this._panels.push(panelNode);
+        this._panels.push(panel);
         this._addTabEvents(index);
     }
 
@@ -88,7 +80,7 @@ export default class Tablist {
 
         const panelElement = document.createElement('div');
         this._panels.forEach((panel) => {
-            panelElement.appendChild(panel);
+            panelElement.appendChild(panel.getNode());
         });
 
         this._anchorDom.appendChild(tablistElement);
