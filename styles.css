@@ -1,4 +1,4 @@
---root {
+:root {
   --u4-green: #81b748;
   --u4-black: #424747;
   --u4-white: #ffffff;
@@ -8,6 +8,18 @@
 
 html {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline-color: var(--u4-blue);
+  outline-offset: 2px;
+}
+
+button {
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid var(--u4-black);
 }
 
 .visually-hidden {
@@ -25,5 +37,9 @@ html {
 .tab-wrapper {
   display: inline-block;
   margin-right: 10px;
+}
+
+.close-tab-button {
+  
 }
 
