@@ -1,3 +1,5 @@
+import Tab from "./Tab.js";
+
 export default class Tablist {
     _tabs = [];
     _panels = [];
@@ -13,9 +15,8 @@ export default class Tablist {
         if (this._tabs === [] || newActiveTabIndex >= this._tabs.length || newActiveTabIndex < 0)
              return;
         this._activeTabIndex = newActiveTabIndex;
-        this._tabs.forEach((tabNode, index) => {
-            const tab = this._getTabFromTabNode(tabNode);
-            this._updateTabSelectedState(tab, index === this._activeTabIndex);
+        this._tabs.forEach((tab, index) => {
+            tab._updateState(index === this._activeTabIndex);
         });
         this._panels.forEach((panel, index) => panel.style.setProperty('display', (index === this._activeTabIndex) ? 'block' : 'none'));
     }
@@ -37,22 +38,17 @@ export default class Tablist {
             newIndex = (index - 1 + this._tabs.length) % this._tabs.length;
         }
         this.setActiveTab(newIndex);
-        this._getTabFromTabNode(this._tabs[newIndex]).focus();
+        this._tabs[newIndex]._getEl().focus();
     }
 
     _addTabEvents(index) {
-        const tabNode = this._tabs[index];
-        const tab = this._getTabFromTabNode(tabNode);
+        const tab = this._tabs[index]._getEl();
         tab.onclick = () => this.setActiveTab(index);
         tab.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
     _createTab(tabId, panelId, tabTitle) {
-        return `
-            <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
-                ${tabTitle}
-            </button>
-        `;
+        return new Tab(tabId, panelId, tabTitle);
     }
 
     _createPanel(panelId, tabId, panelParagraph) {
@@ -74,11 +70,9 @@ export default class Tablist {
         
         const tab = this._createTab(tabId, panelId, tabTitle);
         const panel = this._createPanel(panelId, tabId, panelParagraph);
-
-        const tabNode = new DOMParser().parseFromString(tab, "text/html").body.firstElementChild;
         const panelNode = new DOMParser().parseFromString(panel, "text/html").body.firstElementChild;
         
-        this._tabs.push(tabNode);
+        this._tabs.push(tab);
         this._panels.push(panelNode);
         this._addTabEvents(index);
     }
@@ -89,7 +83,7 @@ export default class Tablist {
         const tablistElement = document.createElement('div');
         tablistElement.setAttribute("role","tablist");
         this._tabs.forEach((tab) => {
-            tablistElement.appendChild(tab);
+            tablistElement.appendChild(tab.getNode());
         });
 
         const panelElement = document.createElement('div');
@@ -109,11 +103,6 @@ export default class Tablist {
 
     #unRender() {
         this._anchorDom.replaceChildren();
-    }
-
-    _updateTabSelectedState(tab, isSelected) {
-        tab.setAttribute('aria-selected', isSelected);
-        tab.setAttribute('tabindex', (isSelected) ? 0 : -1);
     }
 
     _reRender() {
