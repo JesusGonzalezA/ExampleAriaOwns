@@ -3,7 +3,7 @@ import Tab from "../Tab.js";
 export default class ClosableTab extends Tab {
     _renderTpl({ tabId, panelId, tabTitle }) {
         return `
-            <div class="closable-tab">
+            <div>
                 <button id="${tabId}" aria-controls="${panelId}" role="tab" type="button" aria-selected="false">
                     ${tabTitle}
                 </button>

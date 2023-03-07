@@ -22,7 +22,7 @@ html {
   border: 0 !important;
 }
 
-.closable-tab {
+.tab-wrapper {
   display: inline-block;
   margin-right: 10px;
 }
