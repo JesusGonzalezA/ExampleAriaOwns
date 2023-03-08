@@ -22,18 +22,6 @@ button {
   border: 1px solid var(--u4-black);
 }
 
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0,0,0,0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
-
 .tab-wrapper {
   display: inline-block;
   margin-right: 10px;
