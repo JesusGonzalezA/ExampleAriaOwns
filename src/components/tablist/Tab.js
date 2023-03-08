@@ -32,6 +32,7 @@ export default class Tab extends Element {
 
     _updateState(isSelected) {
         this._getEl().setAttribute('aria-selected', isSelected);
-        this._getEl().setAttribute('tabindex', (isSelected) ? 0 : -1);
+        if (isSelected) this.getNode().classList.add('selected');
+        else this.getNode().classList.remove('selected');
     }
 }

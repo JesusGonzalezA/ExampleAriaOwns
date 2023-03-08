@@ -6,28 +6,70 @@
   --u4-gray: #f5f6f6;
 }
 
-html {
+* {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.1rem;
   box-sizing: border-box;
 }
 
-*:focus-visible {
+*:focus,
+button:hover {
+  outline: auto;
   outline-color: var(--u4-blue);
   outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
 }
 
-button {
+.tab-wrapper {
+  display: inline-block;
+  margin-right: 10px; 
+  background-color: var(--u4-blue);
+  color: var(--u4-white);
   padding: 5px;
   margin: 2px;
   border: 1px solid var(--u4-black);
 }
 
-.tab-wrapper {
-  display: inline-block;
-  margin-right: 10px;
+.selected {
+  border-top: 4px solid var(--u4-black);
+  background-color: var(--u4-green);
+
+}
+
+.tab-wrapper > button {
+  background-color: inherit;
+  color: inherit;
+  border-color: transparent;
+}
+
+.tab-wrapper > button:hover,
+.tab-wrapper > button:focus,
+button.tab-wrapper:hover,
+button.tab-wrapper:focus {
+  outline: auto;
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: var(--u4-white);
+  background-color: var(--u4-white);
+  color: var(--u4-black);
+}
+
+.tab-wrapper.selected > button:hover,
+.tab-wrapper.selected > button:focus,
+button.tab-wrapper:hover,
+button.tab-wrapper:focus {
+  outline-color: var(--u4-black);
 }
 
 .close-tab-button {
   
+}
+
+[role="tabpanel"] {
+  border: 1px solid var(--u4-black);
+  padding: 10px;
+  margin: 3px;
 }
 

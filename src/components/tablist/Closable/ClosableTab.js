@@ -21,8 +21,4 @@ export default class ClosableTab extends Tab {
     getCloseButtonEl() {
         return this._tab.querySelector('.close-tab-button');
     }
-
-    _updateState(isSelected) {
-        this._getEl().setAttribute('aria-selected', isSelected);
-    }
 }
