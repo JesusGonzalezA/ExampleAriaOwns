@@ -12,8 +12,7 @@
   box-sizing: border-box;
 }
 
-*:focus,
-button:hover {
+*:focus {
   outline: auto;
   outline-color: var(--u4-blue);
   outline-offset: 2px;
@@ -44,21 +43,21 @@ button:hover {
 }
 
 .tab-wrapper > button:hover,
+button.tab-wrapper:hover {
+  background-color: var(--u4-white);
+  color: var(--u4-black);
+}
+
 .tab-wrapper > button:focus,
-button.tab-wrapper:hover,
 button.tab-wrapper:focus {
   outline: auto;
   outline-offset: 2px;
   outline-style: solid;
   outline-width: 2px;
   outline-color: var(--u4-white);
-  background-color: var(--u4-white);
-  color: var(--u4-black);
 }
 
-.tab-wrapper.selected > button:hover,
 .tab-wrapper.selected > button:focus,
-button.tab-wrapper:hover,
 button.tab-wrapper:focus {
   outline-color: var(--u4-black);
 }
@@ -72,4 +71,25 @@ button.tab-wrapper:focus {
   padding: 10px;
   margin: 3px;
 }
+
+section {
+  margin: 20px;
+  margin-bottom: 40px;
+  width: 80%;
+  max-width: 750px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+
 
