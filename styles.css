@@ -31,7 +31,7 @@
 }
 
 .selected {
-  border-top: 4px solid var(--u4-black);
+  border-top: 5px solid var(--u4-black);
   background-color: var(--u4-green);
 
 }
