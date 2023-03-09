@@ -26,8 +26,8 @@ export default class ClosableTabList extends Tablist {
     }
 
     _addTabEvents(index) {
+      super._addTabEvents(index);
       const tab = this._tabs[index];
-      tab._getEl().onclick = () => this.setActiveTab(index);
       tab.getCloseButtonEl().onclick = () => this.#removeTab(index);
     }
 }

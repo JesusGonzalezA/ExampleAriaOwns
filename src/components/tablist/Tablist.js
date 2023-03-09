@@ -27,26 +27,9 @@ export default class Tablist {
         this.setActiveTab();
     }
 
-    #addArrowNavigation(event, index) {
-        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft')
-            return;
-
-        event.preventDefault();
-
-        let newIndex = index;
-        if (event.key === 'ArrowRight') {
-            newIndex = (index + 1) % this._tabs.length;
-        } else if (event.key === 'ArrowLeft') {
-            newIndex = (index - 1 + this._tabs.length) % this._tabs.length;
-        }
-        this.setActiveTab(newIndex);
-        this._tabs[newIndex]._getEl().focus();
-    }
-
     _addTabEvents(index) {
         const tab = this._tabs[index]._getEl();
         tab.onclick = () => this.setActiveTab(index);
-        tab.onkeydown = (ev) => this.#addArrowNavigation(ev, index);
     }
 
     _createTab(tabId, panelId, tabTitle) {
