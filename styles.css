@@ -25,8 +25,8 @@
   margin-right: 10px; 
   background-color: var(--u4-blue);
   color: var(--u4-white);
-  padding: 5px;
-  margin: 2px;
+  padding: 10px;
+  margin: 5px;
   border: 1px solid var(--u4-black);
 }
 
@@ -51,9 +51,8 @@ button.tab-wrapper:hover {
 .tab-wrapper > button:focus,
 button.tab-wrapper:focus {
   outline: auto;
-  outline-offset: 2px;
   outline-style: solid;
-  outline-width: 2px;
+  outline-width: 4px;
   outline-color: var(--u4-white);
 }
 
