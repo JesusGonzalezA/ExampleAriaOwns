@@ -56,11 +56,6 @@ button.tab-wrapper:focus {
   outline-color: var(--u4-white);
 }
 
-.tab-wrapper.selected > button:focus,
-button.tab-wrapper:focus {
-  outline-color: var(--u4-black);
-}
-
 .close-tab-button {
   
 }
