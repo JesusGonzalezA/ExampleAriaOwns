@@ -1,4 +1,4 @@
-import Tablist from "../tablist.js";
+import Tablist from "../Tablist.js";
 import HorizontalTab from "./HorizontalTab.js";
 
 export default class HorizontalTabList extends Tablist {

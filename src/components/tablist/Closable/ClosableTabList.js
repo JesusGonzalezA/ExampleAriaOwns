@@ -1,5 +1,5 @@
 import ClosableTab from "./ClosableTab.js";
-import Tablist from "../tablist.js";
+import Tablist from "../Tablist.js";
 
 export default class ClosableTabList extends Tablist {
     
