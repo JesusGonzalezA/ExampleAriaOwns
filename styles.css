@@ -48,12 +48,18 @@ button.tab-wrapper:hover {
   color: var(--u4-black);
 }
 
-.tab-wrapper > button:focus,
-button.tab-wrapper:focus {
+.tab-wrapper > button:focus {
   outline: auto;
   outline-style: solid;
   outline-width: 4px;
   outline-color: var(--u4-white);
+}
+
+button.tab-wrapper:focus {
+  outline: auto;
+  outline-style: solid;
+  outline-width: 4px;
+  outline-color: var(--u4-blue);
 }
 
 .close-tab-button {
