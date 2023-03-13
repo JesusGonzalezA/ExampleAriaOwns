@@ -76,6 +76,9 @@ section {
   margin: 20px;
   margin-bottom: 40px;
   width: 80%;
+}
+
+section#section-examples {  
   max-width: 750px;
 }
 

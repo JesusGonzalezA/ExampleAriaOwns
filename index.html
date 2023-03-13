@@ -21,9 +21,31 @@
         <article lang="en">
             <section aria-labelledby="description">
                 <h2 id="description">Description</h2>
-                <p></p>
+                
+                <h3 id="useful-links">Useful links</h3>
+                <ul aria-labelledby="useful-links">    
+                    <li>
+                        <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-owns">MDN documentation</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/JesusGonzalezA/ExampleAriaOwns">GitHub repository</a>
+                    </li>
+                </ul>
+
+                <h3>What is <code>aria-owns</code>?</h3>
+                <code>aria-owns</code> is an attribute that allows to define the parental relationship of an object in the <i>Accessibility Object Model</i>.
+
+                <h3>How to use <code>aria-owns</code>?</h3>
+                The attribute accepts a list of <code>id</code> separated by a space character. If an element has <code>aria-owns</code> and DOM children, the order of the child elements would be:
+                <ol>
+                    <li>The actual DOM children.</li>
+                    <li>The referenced children by <code>id</code> in <code>aria-owns</code>.</li>
+                </ol>
+
+                <h3>When can I use <code>aria-owns</code>?</h3>
+                It is useful when the parent/child relationship cannot be determined from the DOM. <a href="#examples">Check our practical example</a> in which, defining the same html structure, the component will be announced differently by the screen reader, making it more understandable for screen reader users using the <i>virtual cursor for JAWS</i>, <i>browser mode for NVDA</i>...
             </section>
-            <section aria-labelledby="examples">
+            <section id="section-examples" aria-labelledby="examples">
                 <h2 id="examples">Examples</h2>
                 <section>
                     <h3>Horizontal tablist</h3>
