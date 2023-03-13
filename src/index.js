@@ -6,10 +6,16 @@ import {
     ClosableAOWithToolbarTabList
 } from './components/tablist/index.js'
 
+const tabs = [
+    { tabTitle: "Breakfast", panelParagraph: "Coffee and milk" },
+    { tabTitle: "Lunch", panelParagraph: "Lasagna" },
+    { tabTitle: "Dinner", panelParagraph: "Fish and chips" }
+];
+
+const restoreButtonClassName = '.restore-tablist-button';
+
 const populateTabList = (tablist) => {
-    tablist.addTab("Breakfast", "Coffee and milk");
-    tablist.addTab("Lunch","Lasagna");
-    tablist.addTab("Dinner","Fish and chips");
+    tabs.forEach(tab => tablist.addTab(tab));
 } 
 
 const createTabLists = () => {
@@ -31,10 +37,25 @@ const createTabLists = () => {
     return [horizontalTabList, horizontalAutomaticTabList, closableTabList, closableAOTabList, closableAOWithToolbarTabList];
 };
 
+const createRestoreTabListButtons = (tablists) => {
+    const restoreTablistButtons = document.querySelectorAll(restoreButtonClassName);
+
+    restoreTablistButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tablistId = button.dataset.tablist;
+            const tablist = tablists.find(tablist => tablist._anchorDom.id === tablistId);
+            tablist.swapTabs(tabs);
+            tablist._reRender();
+        });
+    });
+};
+
 window.addEventListener('load', () => {
     const tablists = createTabLists();
     tablists.forEach(tablist => {
         populateTabList(tablist);
         tablist.render();
     });
+
+    createRestoreTabListButtons(tablists);
 });

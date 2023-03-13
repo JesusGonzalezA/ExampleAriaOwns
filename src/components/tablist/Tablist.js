@@ -40,14 +40,13 @@ export default class Tablist {
         return new Panel(panelId, tabId, panelParagraph);
     }
 
-    addTab(tabTitle, panelParagraph) {
+    addTab({ tabTitle, panelParagraph }) {
         const index = this._tabs.length;
         const tabId = `${this._anchorDom.id}_tab${index}`;
         const panelId = `${this._anchorDom.id}_panel${index}`
         
         const tab = this._createTab(tabId, panelId, tabTitle);
         const panel = this._createPanel(panelId, tabId, panelParagraph);
-        
         this._tabs.push(tab);
         this._panels.push(panel);
         this._addTabEvents(index);
@@ -88,7 +87,18 @@ export default class Tablist {
 
     _reRender() {
         this.#unRender();
+        this.setActiveTab(0);
         this.#reAttatchEvents();
         this.render();
-      }
+    }
+
+    swapTabs(tabs) {
+        const length = tabs.length;
+        this._tabs = [];
+        this._panels = [];
+        
+        for (let i=0; i<length; ++i) {
+          this.addTab(tabs[i]);
+        }
+    }
 }
