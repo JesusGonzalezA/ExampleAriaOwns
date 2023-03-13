@@ -40,7 +40,8 @@ export default class Tablist {
         return new Panel(panelId, tabId, panelParagraph);
     }
 
-    addTab(tabTitle, panelParagraph) {
+    addTab({ tabTitle, panelParagraph }) {
+        debugger;
         const index = this._tabs.length;
         const tabId = `${this._anchorDom.id}_tab${index}`;
         const panelId = `${this._anchorDom.id}_panel${index}`

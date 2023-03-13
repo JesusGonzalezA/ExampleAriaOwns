@@ -30,4 +30,14 @@ export default class ClosableTabList extends Tablist {
       const tab = this._tabs[index];
       tab.getCloseButtonEl().onclick = () => this.#removeTab(index);
     }
+
+    swapTabs(tabs) {
+      this._tabs = this._panels = [];
+      const length = tabs.length;
+      
+      for (let i=0; i<length; ++i) {
+        const { tabTitle, panelParagraph } = tabs[i];
+        this.addTab(tabTitle, panelParagraph);
+      }
+    }
 }

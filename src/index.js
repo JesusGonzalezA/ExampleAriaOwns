@@ -6,10 +6,14 @@ import {
     ClosableAOWithToolbarTabList
 } from './components/tablist/index.js'
 
+const tabs = [
+    { tabTitle: "Breakfast", panelParagraph: "Coffee and milk" },
+    { tabTitle: "Lunch", panelParagraph: "Lasagna" },
+    { tabTitle: "Dinner", panelParagraph: "Fish and chips" }
+];
+
 const populateTabList = (tablist) => {
-    tablist.addTab("Breakfast", "Coffee and milk");
-    tablist.addTab("Lunch","Lasagna");
-    tablist.addTab("Dinner","Fish and chips");
+    tabs.forEach(tab => tablist.addTab(tab));
 } 
 
 const createTabLists = () => {
@@ -36,5 +40,33 @@ window.addEventListener('load', () => {
     tablists.forEach(tablist => {
         populateTabList(tablist);
         tablist.render();
+    });
+
+    const restoreTablistButtons = document.querySelectorAll('.restore-tablist-button');
+
+    restoreTablistButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tablistId = button.dataset.tablist;
+            const tablist = tablists.find(tablist => tablist._anchorDom.id === tablistId);
+            tablist.swapTabs(tabs);
+            tablist._reRender();
+            // const tablist = document.getElementById(tablistId);
+            // tablist.innerHTML = '';
+            // if(tablist.id =='tablist3'){
+            //     const closableTabList = new ClosableTabList(tablist);
+            //     populateTabList(closableTabList);
+            //     closableTabList.render();
+            // }
+            // else if(tablist.id =='tablist4') {
+            //     const closableAOTabList = new ClosableAOTabList(tablist);
+            //     populateTabList(closableAOTabList);
+            //     closableAOTabList.render();
+            // }
+            // else if(tablist.id == 'tablist5') {
+            //     const closableAOWithToolbarTabList = new ClosableAOWithToolbarTabList(tablist);
+            //     populateTabList(closableAOWithToolbarTabList);
+            //     closableAOWithToolbarTabList.render();
+            // }
+        });
     });
 });
