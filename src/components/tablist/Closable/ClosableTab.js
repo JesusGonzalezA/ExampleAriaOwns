@@ -8,7 +8,7 @@ export default class ClosableTab extends Tab {
                     ${tabTitle}
                 </button>
                 <button id="${tabId}_closable_button" class="close-tab-button" aria-label="Close ${tabTitle} tab">
-                    X
+                    &#10006;
                 </button>
             </div>
         `;
