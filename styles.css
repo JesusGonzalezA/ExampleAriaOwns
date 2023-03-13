@@ -20,14 +20,34 @@
   outline-width: 2px;
 }
 
-.tab-wrapper {
+button, .tab-wrapper, [role="tabpanel"] {
+  border-radius: 5px;
+}
+
+.restore-tablist-button, .tab-wrapper {
   display: inline-block;
   margin-right: 10px; 
-  background-color: var(--u4-blue);
-  color: var(--u4-white);
   padding: 10px;
   margin: 5px;
   border: 1px solid var(--u4-black);
+}
+
+.restore-tablist-button {
+  margin-bottom: 15px;
+  background-color: transparent;
+  color: var(--u4-blue);
+  border: solid transparent 1px;
+  text-decoration: underline;
+}
+
+.restore-tablist-button:hover {
+  border: solid 1px var(--u4-blue);
+  text-decoration: none;
+}
+
+.tab-wrapper {
+  background-color: var(--u4-blue);
+  color: var(--u4-white);
 }
 
 .selected {
@@ -89,6 +109,5 @@ h2 {
 h3 {
   font-size: 1.1rem;
 }
-
 
 
