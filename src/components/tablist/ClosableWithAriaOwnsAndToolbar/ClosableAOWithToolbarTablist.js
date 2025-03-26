@@ -22,7 +22,7 @@ export default class ClosableAOWithToolbarTabList extends ClosableTabList {
       toolbarNode.setAttribute('aria-owns', toolbarAriaOwns);
 
       const tabIdArr = this._tabs.map(tab => tab._getEl().id);
-      const tablistAriaOwns = [...tabIdArr, toolbarId].join(' ');
+      const tablistAriaOwns = [...tabIdArr].join(' ');
       this._tablistWrapperDom.setAttribute('aria-owns', tablistAriaOwns);
     }
 }
